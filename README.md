@@ -36,4 +36,8 @@ var sched = new SimpleSchedule().Run().After(Interval.Hours(2));
 The main parts are:
 1) A maintained list of scheduled tasks, persisted somewhere in-memory or via an implementation of the IScheduledTaskRepository
 2) A timer which elapses by default every 10 seconds (this is the minimum resolution, i.e. you cant schedule tasks more frequequently than this). The timer evaluates whether any of the tasks have become due and adds any due tasks to a non-blocking collection of Action<T>
-3) A long-running async thread executes any Actions in the collection, this doesn't hold up the timer, so you need to be careful about long tasks completing before they become due again.
+3) A TPL DataFlow job queue will execute any Actions in the collection, this doesn't hold up the timer, so you need to be careful about long tasks completing before they become due again.
+
+## Future stuff
+
+* distribution / leader election - leader should enqueue a stillAlive task every 30s ect, to be persisted, watched by leaders-in-waiting, if not updated, another node becomes the leader?
