@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29505.145
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AJP.SimpleScheduler", "src\AJP.SimpleScheduler\AJP.SimpleScheduler.csproj", "{2956D5F5-A527-4D3B-93CC-490BF58D2B14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AJP.SimpleScheduler.Tests", "tests\AJP.SimpleScheduler.Tests\AJP.SimpleScheduler.Tests.csproj", "{02D1753A-9EBE-45CF-849A-E7824A5CDF70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AJP.SimpleScheduler.Tests", "tests\AJP.SimpleScheduler.Tests\AJP.SimpleScheduler.Tests.csproj", "{02D1753A-9EBE-45CF-849A-E7824A5CDF70}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AJP.SimpleScheduler.TestApp", "src\AJP.SimpleScheduler.TestApp\AJP.SimpleScheduler.TestApp.csproj", "{609059AD-42C6-4965-84CD-B470FD0A9A39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{02D1753A-9EBE-45CF-849A-E7824A5CDF70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02D1753A-9EBE-45CF-849A-E7824A5CDF70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02D1753A-9EBE-45CF-849A-E7824A5CDF70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
