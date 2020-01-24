@@ -6,10 +6,10 @@ Obviously there is Quartz.net, but I dislike cron strings and fancied a go a wri
 
 I intend to support the following modes and represent them with a hopefully simple string syntax:
 * `"now"` (run the task immediately)
-* `"at-2020/01/24T00:00:00"` (run the task at a specific time, the date must be parsable as a UTC DateTime in dotnet)
-* `"after-4d"` or `"after-2hh"` or `"after-50ss"` (run the task after a specified timespan)
-* `"every-4d"` (run the task every 4 days forever or until schedule is changed or deleted)
-* `"every-1mm-x5"` (run the task every minute, 5 times then stop)
+* `"at|2020-01-24T00:00:00"` (run the task at a specific time, the date must be parsable as a UTC DateTime in dotnet)
+* `"after|4d"` or `"after|2hh"` or `"after|50ss"` (run the task after a specified timespan)
+* `"every|4d"` (run the task every 4 days forever or until schedule is changed or deleted)
+* `"every|1mm|x5"` (run the task every minute, 5 times then stop)
 
 Timespans are described using a combination of a number and a letter(s) where `y`=years, `m`=months, `d`=days, the time components use two letters; `hh`=hours, `mm`=minutes and `ss`=seconds.
 
