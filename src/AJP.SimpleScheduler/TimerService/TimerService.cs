@@ -44,19 +44,24 @@ namespace AJP.SimpleScheduler.TimerService
 
         private void TimerTask(object timerState)
         {
-            Console.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: starting a new callback.");
             var state = timerState as SchedulerState;
 
             var dueTasks = state.DetermineIfAnyTasksAreDue();
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss.fff}: timer elapsed. {dueTasks.Count} Task(s) due.");
 
             foreach (var dueTask in dueTasks)
             {
                 _dueTaskJobQueue.Enqueue(new NormalJob(dueTask.JobData));
 
-                // calculate next due time
-                dueTask.DetermineNextDueTime();
+                // update the task
+                dueTask.LastRunTime = state.DateTimeProvider.UtcNow();
+                dueTask.NumberOfPreviousRuns += 1;
+                var shouldRunAgain = dueTask.DetermineNextDueTime();
+                if (shouldRunAgain)
+                    state.UpdateScheduledTask(dueTask);
+                else
+                    state.RemoveScheduledTask(dueTask.Id);
             }
         }
-
     }
 }

@@ -4,26 +4,29 @@ using System;
 namespace SimpleScheduler
 {
     public class SimpleSchedule : ISimpleSchedule
-    {
-        private string _type;
-        private int _repeatTimes;
-        private string _jobData;
-        private DateTime _runAt;
+    {        
         private IInterval _interval;
 
         public const string PartSeperator = "|";
-        private const string _typeNow = "now";
-        private const string _typeAt = "at";
-        private const string _typeAfter = "after";
-        private const string _typeEvery = "every";
+        public const string TypeNow = "now";
+        public const string TypeAt = "at";
+        public const string TypeAfter = "after";
+        public const string TypeEvery = "every";
 
-        public string Type => _type;
+        public string Id { get; set; }
+        public string Type { get; set; }
+        public DateTime Due { get; set; }
+        public int Repeated { get; set; }
+        public string JobData { get; set; }
 
-        public DateTime Due => _runAt;
+        public int NumberOfPreviousRuns { get; set; }
+        public DateTime LastRunTime { get; set; }
 
-        public int Repeated => _repeatTimes;
-
-        public string JobData => _jobData;
+        public SimpleSchedule(string id = null)
+        {
+            if(string.IsNullOrEmpty(id))
+                Id = Guid.NewGuid().ToString();
+        }
 
         public ISimpleSchedule Run(string jobData)
         {
@@ -32,15 +35,15 @@ namespace SimpleScheduler
                 throw new ArgumentException("message", nameof(jobData));
             }
 
-            _jobData = jobData;
+            JobData = jobData;
 
             return this;
         }
 
         public ISimpleSchedule Now() 
         {
-            _type = _typeNow;
-            _runAt = DateTime.UtcNow; // TODO this needs to be IDateTimeProvider? Factory?
+            Type = TypeNow;
+            Due = DateTime.UtcNow; // TODO this needs to be IDateTimeProvider? Factory?
             return this;
         }
 
@@ -52,14 +55,14 @@ namespace SimpleScheduler
 
         public ISimpleSchedule At(DateTime utcRunAt)
         {
-            _type = _typeAt;
-            _runAt = utcRunAt;
+            Type = TypeAt;
+            Due = utcRunAt;
             return this;
         }
 
         public ISimpleSchedule After(IInterval interval)
         {
-            _type = _typeAfter;
+            Type = TypeAfter;
             _interval = interval;
             DetermineNextDueTime();
             return this;
@@ -67,7 +70,7 @@ namespace SimpleScheduler
 
         public ISimpleSchedule Every(IInterval interval)
         {
-            _type = _typeEvery;
+            Type = TypeEvery;
             _interval = interval;
             DetermineNextDueTime();
             return this;
@@ -78,7 +81,7 @@ namespace SimpleScheduler
             if (repeatTimes < 0)
                 throw new ArgumentException("repeatTimes must not be negative");
 
-            _repeatTimes = repeatTimes;
+            Repeated = repeatTimes;
             return Every(interval);
         }
 
@@ -93,18 +96,18 @@ namespace SimpleScheduler
 
             switch (parts[0]) 
             {
-                case _typeNow:
+                case TypeNow:
                     return new SimpleSchedule().Now();
 
-                case _typeAt:
+                case TypeAt:
                     var runAt = DateTime.Parse(parts[1]);
                     return new SimpleSchedule().At(runAt);
 
-                case _typeAfter:
+                case TypeAfter:
                     var afterInterval = Interval.Parse(parts[1]);
                     return new SimpleSchedule().After(afterInterval);
 
-                case _typeEvery:
+                case TypeEvery:
                     var everyInterval = Interval.Parse(parts[1]);
                     var repeatTimes = 0;
                     if(parts.Length > 2)
@@ -120,38 +123,52 @@ namespace SimpleScheduler
         {
             var timePart = string.Empty;
             var repeatPart = string.Empty;
-            switch (_type)
+            switch (Type)
             {
-                case _typeAt:
-                    timePart = $"{PartSeperator}{_runAt:s}";
+                case TypeAt:
+                    timePart = $"{PartSeperator}{Due:s}";
                     break;
-                case _typeAfter:
+                case TypeAfter:
                     timePart = $"{PartSeperator}{_interval}";
                     break;
-                case _typeEvery:
-                    repeatPart = _repeatTimes != 0 ? $"{PartSeperator}x{_repeatTimes}" : string.Empty;
+                case TypeEvery:
+                    repeatPart = Repeated != 0 ? $"{PartSeperator}x{Repeated}" : string.Empty;
                     timePart = $"{PartSeperator}{_interval}";
                     break;
                 default:
                     break;
             }
-            return $"{_type}{timePart}{repeatPart}";
+            return $"{Type}{timePart}{repeatPart}";
         }
 
-        public void DetermineNextDueTime()
+        public bool DetermineNextDueTime()
         {
-            // TODO if now and already run, signal for task to be removed??
-
-            if (_type == _typeAfter)
+            // Check conditions and signal for task to be removed
+            if (Type == TypeNow && NumberOfPreviousRuns > 0)
             {
-                _runAt = AddInterval(DateTime.UtcNow);
+                return false; // mark for deletion
             }
 
-            if (_type == _typeEvery) 
+            if (Type == TypeAt && NumberOfPreviousRuns > 0)
             {
-                // check last run time and number of run times etc??
-                _runAt = AddInterval(DateTime.UtcNow);
+                return false; // mark for deletion
             }
+
+            if (Type == TypeAfter)
+            {
+                Due = AddInterval(DateTime.UtcNow);
+                return NumberOfPreviousRuns > 0;
+            }
+
+            if (Type == TypeEvery) 
+            {
+                Due = AddInterval(DateTime.UtcNow);
+                if (Repeated != 0)
+                {
+                    return NumberOfPreviousRuns <= Repeated;
+                }
+            }
+            return true;
         }
 
         private DateTime AddInterval(DateTime date) 

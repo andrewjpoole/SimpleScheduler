@@ -3,13 +3,16 @@ using System;
 
 namespace SimpleScheduler
 {
-
     public interface ISimpleSchedule 
     {
+        string Id { get; }
         string Type { get; }
         DateTime Due { get; }
         int Repeated { get; }
         string JobData { get; }
+
+        int NumberOfPreviousRuns { get; set; }
+        DateTime LastRunTime { get; set; }
 
         ISimpleSchedule Run(string jobData);
         ISimpleSchedule Now();
@@ -20,6 +23,6 @@ namespace SimpleScheduler
         ISimpleSchedule Every(IInterval interval, int times);
 
         ISimpleSchedule FromString(string scheduleString);
-        void DetermineNextDueTime();
+        bool DetermineNextDueTime();
     }    
 }

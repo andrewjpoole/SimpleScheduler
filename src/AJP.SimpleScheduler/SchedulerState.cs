@@ -8,20 +8,19 @@ namespace AJP.SimpleScheduler
 {
     public class SchedulerState : ISchedulerState
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
+        public readonly IDateTimeProvider DateTimeProvider;
         private Dictionary<string, ISimpleSchedule> _allTasks = new Dictionary<string, ISimpleSchedule>();
 
         public SchedulerState(IDateTimeProvider dateTimeProvider)
         {
-            _dateTimeProvider = dateTimeProvider;
+            DateTimeProvider = dateTimeProvider;
             
             // load tasks from persistence if configured in DI
         }
 
         public void AddScheduledTask(ISimpleSchedule simpleSchedule)
-        {
-            var id = Guid.NewGuid().ToString();
-            _allTasks.Add(id, simpleSchedule);
+        {            
+            _allTasks.Add(simpleSchedule.Id, simpleSchedule);
         }
 
         public void RemoveScheduledTask(string id)
@@ -37,9 +36,12 @@ namespace AJP.SimpleScheduler
 
         public List<ISimpleSchedule> DetermineIfAnyTasksAreDue()
         {
-            return (_allTasks.Values.Where(task => task.Due < _dateTimeProvider.UtcNow())).ToList();
+            return (_allTasks.Values.Where(task => task.Due < DateTimeProvider.UtcNow())).ToList();
         }
 
-        
+        public void UpdateScheduledTask(ISimpleSchedule dueTask)
+        {
+            
+        }
     }
 }

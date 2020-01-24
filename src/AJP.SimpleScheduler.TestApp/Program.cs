@@ -67,7 +67,7 @@ namespace AJP.SimpleScheduler.TestApp
 
             while(true) 
             {
-                // do nothing
+                // do nothing, but keep the console app alive
             }
         }
     }
