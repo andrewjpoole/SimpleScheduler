@@ -14,6 +14,10 @@ namespace AJP.SimpleScheduler.Intervals
         public const string MinutesUnit = "mm";
         public const string SecondsUnit = "ss";
 
+        public Interval()
+        {
+        }
+
         public Interval(string unit, int number)
         {
             Unit = unit;
