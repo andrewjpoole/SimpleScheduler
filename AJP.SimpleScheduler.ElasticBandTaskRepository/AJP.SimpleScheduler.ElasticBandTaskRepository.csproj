@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/andrewjpoole/SimpleScheduler</RepositoryUrl>
+    <PackageReleaseNotes>1.0.0) Initial version</PackageReleaseNotes>
+    <Authors>Andrew Poole</Authors>
+    <Description>An implenetation of IScheduledTaskRepository that uses the ElasticBand project to store tasks in Elasticsearch.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AJP.ElasticBand" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\AJP.SimpleScheduler\AJP.SimpleScheduler.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -12,34 +12,15 @@ namespace AJP.SimpleScheduler
 {
     public static class ServiceProviderExtensions
     {
-        public static IServiceCollection AddSimpleScheduler(this IServiceCollection services, bool UseElasticBandRepository = true)
+        public static IServiceCollection AddSimpleScheduler(this IServiceCollection services)
         {
             services
                 .AddSingleton<IDateTimeProvider, DateTimeProvider.DateTimeProvider>()
                 .AddSingleton<IScheduledTaskBuilderFactory, ScheduledTaskBuilderFactory>()
                 .AddSingleton<IDueTaskJobQueue>(new DueTaskJobQueue())
                 .AddSingleton<INormalJobExecuter, NormalJobExecuter>()
-                .AddHostedService<TimerService.TimerService>();
-
-            if (UseElasticBandRepository)
-            { 
-                services.AddSingleton<IScheduledTaskRepository, ElasticBandScheduledTaskRepository>();
-                services.AddSingleton<ElasticScheduledTaskRepository<ScheduledTask>>();
-            }
-            else
-            { 
-                services.AddSingleton<IScheduledTaskRepository, InMemoryScheduledTaskRepository>(); 
-            }
-
-            return services;
-        }
-
-        public static IServiceCollection AddElasticBand(this IServiceCollection services)
-        {
-            services
-                .AddHttpClient()
-                .AddSingleton<IElasticQueryBuilder, ElasticQueryBuilder>()
-                .AddSingleton<IElasticBand, ElasticBand.ElasticBand>();
+                .AddHostedService<TimerService.TimerService>()            
+                .AddSingleton<IScheduledTaskRepository, InMemoryScheduledTaskRepository>();
 
             return services;
         }

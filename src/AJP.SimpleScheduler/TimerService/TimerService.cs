@@ -41,7 +41,7 @@ namespace AJP.SimpleScheduler.TimerService
 
             var dueTasks = taskRepo.DetermineIfAnyTasksAreDue();
 
-            _logger.LogTrace($"{DateTime.Now:HH:mm:ss}: timer elapsed. {dueTasks.Count} due out of {taskRepo.AllTasks().Count} Tasks");
+            _logger.LogInformation($"{DateTime.Now:HH:mm:ss}: timer elapsed. {dueTasks.Count} due out of {taskRepo.AllTasks().Count} Tasks");
             
             foreach (var dueTask in dueTasks)
             {
