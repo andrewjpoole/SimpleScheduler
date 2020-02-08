@@ -48,49 +48,49 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             return $"{Type}{timePart}{repeatPart}";
         }
 
-        public bool DetermineNextDueTime()
-        {
-            // Check conditions and signal for task to be removed
-            if (Type == TypeNow && NumberOfPreviousRuns > 0)
-            {
-                return false; // mark for deletion
-            }
+        //public bool DetermineNextDueTime()
+        //{
+        //    // Check conditions and signal for task to be removed
+        //    if (Type == TypeNow && NumberOfPreviousRuns > 0)
+        //    {
+        //        return false; // mark for deletion
+        //    }
 
-            if (Type == TypeAt && NumberOfPreviousRuns > 0)
-            {
-                return false; // mark for deletion
-            }
+        //    if (Type == TypeAt && NumberOfPreviousRuns > 0)
+        //    {
+        //        return false; // mark for deletion
+        //    }
 
-            if (Type == TypeAfter)
-            {
-                Due = AddInterval(DateTime.UtcNow);
-                return NumberOfPreviousRuns < 1;
-            }
+        //    if (Type == TypeAfter)
+        //    {
+        //        Due = AddInterval(DateTime.UtcNow);
+        //        return NumberOfPreviousRuns < 1;
+        //    }
 
-            if (Type == TypeEvery)
-            {
-                Due = AddInterval(DateTime.UtcNow);
-                if (Repeated != 0)
-                {
-                    return NumberOfPreviousRuns < Repeated;
-                }
-            }
-            return true;
-        }
+        //    if (Type == TypeEvery)
+        //    {
+        //        Due = AddInterval(DateTime.UtcNow);
+        //        if (Repeated != 0)
+        //        {
+        //            return NumberOfPreviousRuns < Repeated;
+        //        }
+        //    }
+        //    return true;
+        //}
 
-        private DateTime AddInterval(DateTime date)
-        {
-            return Interval.Unit switch
-            {
-                Lapse.YearsUnit => date.AddYears(Interval.Number),
-                Lapse.MonthsUnit => date.AddMonths(Interval.Number),
-                Lapse.DaysUnit => date.AddDays(Interval.Number),
-                Lapse.HoursUnit => date.AddHours(Interval.Number),
-                Lapse.MinutesUnit => date.AddMinutes(Interval.Number),
-                Lapse.SecondsUnit => date.AddSeconds(Interval.Number),
-                null => date,
-                _ => throw new NotSupportedException($"Interval unit of {Interval.Unit} is not supported"),
-            };
-        }
+        //private DateTime AddInterval(DateTime date)
+        //{
+        //    return Interval.Unit switch
+        //    {
+        //        Lapse.YearsUnit => date.AddYears(Interval.Number),
+        //        Lapse.MonthsUnit => date.AddMonths(Interval.Number),
+        //        Lapse.DaysUnit => date.AddDays(Interval.Number),
+        //        Lapse.HoursUnit => date.AddHours(Interval.Number),
+        //        Lapse.MinutesUnit => date.AddMinutes(Interval.Number),
+        //        Lapse.SecondsUnit => date.AddSeconds(Interval.Number),
+        //        null => date,
+        //        _ => throw new NotSupportedException($"Interval unit of {Interval.Unit} is not supported"),
+        //    };
+        //}
     }
 }

@@ -2,10 +2,14 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AJP.SimpleScheduler.Intervals;
+using AJP.SimpleScheduler.ScheduledTasks;
 using AJP.SimpleScheduler.ScheduledTaskStorage;
 using AJP.SimpleScheduler.TaskExecution;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NodaTime;
+using NodaTime.Extensions;
 
 namespace AJP.SimpleScheduler.TimerService
 {
@@ -13,16 +17,18 @@ namespace AJP.SimpleScheduler.TimerService
     {
         private readonly IConfiguration _config;
         private readonly ILogger<TimerService> _logger;
+        private readonly IClock _clock;
         private readonly IScheduledTaskRepository _schedulerState;
         private readonly IDueTaskJobQueue _dueTaskJobQueue;
         private Timer _timer;
         private readonly int _initialDelay = 2000;
         private readonly int _period = 2000;
 
-        public TimerService(IConfiguration config, ILogger<TimerService> logger, IScheduledTaskRepository schedulerState, IDueTaskJobQueue dueTaskJobQueue)
+        public TimerService(IConfiguration config, ILogger<TimerService> logger, IClock clock, IScheduledTaskRepository schedulerState, IDueTaskJobQueue dueTaskJobQueue)
         {
             _config = config;
             _logger = logger;
+            _clock = clock;
             _schedulerState = schedulerState;
             _dueTaskJobQueue = dueTaskJobQueue;
 
@@ -50,12 +56,63 @@ namespace AJP.SimpleScheduler.TimerService
                 // update the task
                 dueTask.LastRunTime = taskRepo.Clock.GetCurrentInstant().ToDateTimeUtc();
                 dueTask.NumberOfPreviousRuns += 1;
-                var shouldRunAgain = dueTask.DetermineNextDueTime();
+                var shouldRunAgain = DetermineNextDueTime(dueTask);
                 if (shouldRunAgain)
                     taskRepo.UpdateScheduledTask(dueTask);
                 else
                     taskRepo.RemoveScheduledTask(dueTask.Id);
             }
+        }
+
+        private bool DetermineNextDueTime(ScheduledTask task)
+        {
+            // Check conditions and signal for task to be removed
+            if (task.Type == ScheduledTask.TypeNow && task.NumberOfPreviousRuns > 0)
+            {
+                return false; // mark for deletion
+            }
+
+            if (task.Type == ScheduledTask.TypeAt && task.NumberOfPreviousRuns > 0)
+            {
+                return false; // mark for deletion
+            }
+
+            if (task.Type == ScheduledTask.TypeAfter)
+            {
+                task.Due = AddInterval(task).ToDateTimeUtc();
+                return task.NumberOfPreviousRuns < 1;
+            }
+
+            if (task.Type == ScheduledTask.TypeEvery)
+            {
+                task.Due = AddInterval(task).ToDateTimeUtc();
+                if (task.Repeated != 0)
+                {
+                    return task.NumberOfPreviousRuns < task.Repeated;
+                }
+            }
+            return true;
+        }
+
+        private ZonedDateTime AddInterval(ScheduledTask task)
+        {
+            var nowUtc = _clock.GetCurrentInstant().InUtc();
+
+            var london = DateTimeZoneProviders.Tzdb["Europe/London"];
+            var clock = SystemClock.Instance.InZone(london); // should DI one of these?
+            var londonNow = clock.GetCurrentLocalDateTime();
+
+            return task.Interval.Unit switch
+            {
+                Lapse.YearsUnit => londonNow.PlusYears(task.Interval.Number).InUtc(),
+                Lapse.MonthsUnit => londonNow.PlusMonths(task.Interval.Number).InUtc(),
+                Lapse.DaysUnit => londonNow.PlusDays(task.Interval.Number).InUtc(),
+                Lapse.HoursUnit => londonNow.PlusHours(task.Interval.Number).InUtc(),
+                Lapse.MinutesUnit => londonNow.PlusMinutes(task.Interval.Number).InUtc(),
+                Lapse.SecondsUnit => londonNow.PlusSeconds(task.Interval.Number).InUtc(),
+                null => nowUtc,
+                _ => throw new NotSupportedException($"Interval unit of {task.Interval.Unit} is not supported"),
+            };
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)

@@ -13,6 +13,10 @@ I intend to support the following modes and represent them with a hopefully simp
 
 Timespans are described using a combination of a number and a letter(s) where `y`=years, `m`=months, `d`=days, the time components use two letters; `hh`=hours, `mm`=minutes and `ss`=seconds.
 
+Internally, SimpeScheduler depends on the excellent NodaTime library, all future datetimes are calculated by NodaTime in the london timezone and then stored as UTC BCL DateTime.
+
+## How to use it
+
 ```c#
 var sched = new SimpleSchedule().FromString("now");
 var sched = new SimpleSchedule().FromString("at|2020-01-24T00:00:00");

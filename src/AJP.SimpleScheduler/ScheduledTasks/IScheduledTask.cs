@@ -15,7 +15,5 @@ namespace AJP.SimpleScheduler.ScheduledTasks
 
         int NumberOfPreviousRuns { get; set; }
         DateTime LastRunTime { get; set; }
-        
-        bool DetermineNextDueTime();
     }
 }

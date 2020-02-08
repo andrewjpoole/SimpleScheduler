@@ -11,8 +11,16 @@ The task to be performed is a string, which could be a task id or serialised obj
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/andrewjpoole/SimpleScheduler</RepositoryUrl>
     <Authors>Andrew Poole</Authors>
-    <PackageReleaseNotes>1.0.0) Initial version</PackageReleaseNotes>
+    <PackageReleaseNotes>1.1.0) Use NodaTime for all internal future datetime calculations, in london timezone.
+1.0.0) Initial version</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <Version>1.1.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1998</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +28,7 @@ The task to be performed is a string, which could be a task id or serialised obj
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.1" />
-    <PackageReference Include="NodaTime" Version="3.0.0-beta01" />
+    <PackageReference Include="NodaTime" Version="2.4.7" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.0" />
   </ItemGroup>
 
