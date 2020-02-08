@@ -1,19 +1,19 @@
-﻿using AJP.SimpleScheduler.DateTimeProvider;
+﻿using NodaTime;
 
 namespace AJP.SimpleScheduler.ScheduledTasks
 {
     public class ScheduledTaskBuilderFactory : IScheduledTaskBuilderFactory
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IClock _clock;
 
-        public ScheduledTaskBuilderFactory(IDateTimeProvider dateTimeProvider)
+        public ScheduledTaskBuilderFactory(IClock clock)
         {
-            _dateTimeProvider = dateTimeProvider;
+            _clock = clock;
         }
 
         public ScheduledTaskBuilder BuildTask()
         {
-            return new ScheduledTaskBuilder(_dateTimeProvider);
+            return new ScheduledTaskBuilder(_clock);
         }
     }
 }

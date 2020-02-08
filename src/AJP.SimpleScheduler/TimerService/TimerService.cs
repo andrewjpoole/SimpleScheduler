@@ -48,7 +48,7 @@ namespace AJP.SimpleScheduler.TimerService
                 _dueTaskJobQueue.Enqueue(new NormalJob(dueTask.JobData, dueTask));
 
                 // update the task
-                dueTask.LastRunTime = taskRepo.DateTimeProvider.UtcNow();
+                dueTask.LastRunTime = taskRepo.Clock.GetCurrentInstant().ToDateTimeUtc();
                 dueTask.NumberOfPreviousRuns += 1;
                 var shouldRunAgain = dueTask.DetermineNextDueTime();
                 if (shouldRunAgain)

@@ -1,27 +1,27 @@
-﻿using AJP.SimpleScheduler.DateTimeProvider;
-using AJP.SimpleScheduler.Intervals;
+﻿using AJP.SimpleScheduler.Intervals;
+using NodaTime;
 using System;
 
 namespace AJP.SimpleScheduler.ScheduledTasks
 {
     public class ScheduledTaskBuilder : IScheduledTaskBuilder
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IClock _clock;
 
         public string Id { get; set; }
         public DateTime Created { get; set; }
-        public Interval Interval { get; set; }
+        public Lapse Interval { get; set; }
         public string JobData { get; set; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
         public int Repeated { get; set; }
 
-        public ScheduledTaskBuilder(IDateTimeProvider dateTimeProvider)
+        public ScheduledTaskBuilder(IClock clock)
         {
-            _dateTimeProvider = dateTimeProvider;
+            _clock = clock;
 
             Id = Guid.NewGuid().ToString();
-            Created = _dateTimeProvider.UtcNow();
+            Created = _clock.GetCurrentInstant().ToDateTimeUtc();
         }
 
         public ScheduledTaskBuilder Run(string jobData)
@@ -39,7 +39,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public ScheduledTaskBuilder Now()
         {
             Type = ScheduledTask.TypeNow;
-            Due = _dateTimeProvider.UtcNow();
+            Due = _clock.GetCurrentInstant().ToDateTimeUtc();
             return this;
         }
 
@@ -56,7 +56,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             return this;
         }
 
-        public ScheduledTaskBuilder After(Interval interval)
+        public ScheduledTaskBuilder After(Lapse interval)
         {
             Type = ScheduledTask.TypeAfter;
             Interval = interval;
@@ -64,7 +64,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             return this;
         }
 
-        public ScheduledTaskBuilder Every(Interval interval)
+        public ScheduledTaskBuilder Every(Lapse interval)
         {
             Type = ScheduledTask.TypeEvery;
             Interval = interval;
@@ -72,7 +72,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             return this;
         }
 
-        public ScheduledTaskBuilder Every(Interval interval, int repeatTimes)
+        public ScheduledTaskBuilder Every(Lapse interval, int repeatTimes)
         {
             if (repeatTimes < 0)
                 throw new ArgumentException("repeatTimes must not be negative");
@@ -100,14 +100,14 @@ namespace AJP.SimpleScheduler.ScheduledTasks
                     return At(runAt).CreateTask();
 
                 case ScheduledTask.TypeAfter:
-                    var afterInterval = Interval.Parse(parts[1]);
+                    var afterInterval = Lapse.Parse(parts[1]);
                     return After(afterInterval).CreateTask();
 
                 case ScheduledTask.TypeEvery:
-                    var everyInterval = Interval.Parse(parts[1]);
+                    var everyInterval = Lapse.Parse(parts[1]);
                     var repeatTimes = 0;
                     if (parts.Length > 2)
-                        repeatTimes = Interval.ParseRepeatTimes(parts[2]);
+                        repeatTimes = Lapse.ParseRepeatTimes(parts[2]);
                     return Every(everyInterval, repeatTimes).CreateTask();
 
                 default:

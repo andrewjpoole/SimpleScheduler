@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="AJP.ElasticBand" Version="1.4.0" />
+    <PackageReference Include="NodaTime" Version="3.0.0-beta01" />
   </ItemGroup>
 
   <ItemGroup>

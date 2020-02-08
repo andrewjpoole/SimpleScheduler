@@ -11,7 +11,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         DateTime Due { get; }
         int Repeated { get; }
         string JobData { get; }
-        Interval Interval { get; set; }
+        Lapse Interval { get; set; }
 
         int NumberOfPreviousRuns { get; set; }
         DateTime LastRunTime { get; set; }

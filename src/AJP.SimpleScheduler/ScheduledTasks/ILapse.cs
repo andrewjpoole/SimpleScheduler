@@ -1,6 +1,6 @@
 ﻿namespace AJP.SimpleScheduler.Intervals
 {
-    public interface IInterval
+    public interface ILapse
     {
         string Unit { get; }
         int Number { get; }

@@ -3,13 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
-using AJP.SimpleScheduler.DateTimeProvider;
-using AJP.SimpleScheduler.ScheduledTaskStorage;
-using AJP.SimpleScheduler.TaskExecution;
-using AJP.SimpleScheduler.TimerService;
 using Serilog.Sinks.Elasticsearch;
 using System.IO;
-using AJP.SimpleScheduler.ScheduledTasks;
 using AJP.ElasticBand;
 using AJP.SimpleScheduler.ElasticBandTaskRepository;
 

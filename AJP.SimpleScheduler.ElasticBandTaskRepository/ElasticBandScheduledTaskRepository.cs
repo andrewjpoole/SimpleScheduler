@@ -1,5 +1,5 @@
-﻿using AJP.SimpleScheduler.DateTimeProvider;
-using AJP.SimpleScheduler.ScheduledTasks;
+﻿using AJP.SimpleScheduler.ScheduledTasks;
+using NodaTime;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,18 +8,20 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
 {
     public class ElasticBandScheduledTaskRepository : IScheduledTaskRepository
     {
-        public IDateTimeProvider DateTimeProvider { get; private set; }
+        public IClock Clock { get; private set; }
         private readonly ElasticScheduledTaskRepository<ScheduledTask> _scheduledTaskRepository;
 
-        public ElasticBandScheduledTaskRepository(IDateTimeProvider dateTimeProvider, ElasticScheduledTaskRepository<ScheduledTask> scheduledTaskRepository)
+        public ElasticBandScheduledTaskRepository(
+            IClock clock,
+            ElasticScheduledTaskRepository<ScheduledTask> scheduledTaskRepository)
         {
-            DateTimeProvider = dateTimeProvider;
+            Clock = clock;
             _scheduledTaskRepository = scheduledTaskRepository;            
         }
 
         public void AddScheduledTask(ScheduledTask scheduledTask)
         {
-            scheduledTask.Created = DateTimeProvider.UtcNow();
+            scheduledTask.Created = Clock.GetCurrentInstant().ToDateTimeUtc();
             _scheduledTaskRepository.Index(scheduledTask.Id, scheduledTask);
         }
 
@@ -42,9 +44,11 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
 
         public List<ScheduledTask> DetermineIfAnyTasksAreDue()
         {
-            //return _allTasks.Values.Where(task => task.Due < DateTimeProvider.UtcNow()).ToList();
-            var response = _scheduledTaskRepository.Query("").Result; // TODO add this functionality into eb
-            return response.Data.Where(task => task.Due < DateTimeProvider.UtcNow()).ToList();
+            //var response = _scheduledTaskRepository.Query("").Result;
+            //return response.Data.Where(task => task.Due < DateTimeProvider.UtcNow()).ToList();
+            
+            var response = _scheduledTaskRepository.Query($"Due<{Clock.GetCurrentInstant().ToDateTimeUtc():s}").Result; 
+            return response.Data;
         }
 
         public void UpdateScheduledTask(ScheduledTask scheduledTask)

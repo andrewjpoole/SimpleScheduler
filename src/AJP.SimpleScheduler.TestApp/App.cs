@@ -24,9 +24,9 @@ namespace AJP.SimpleScheduler.TestApp
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task now!").Now());
-            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task after 10 seconds").After(Interval.Seconds(10)));
+            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task after 10 seconds").After(Lapse.Seconds(10)));
             _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task at a specified DateTime").At(DateTime.Now.AddSeconds(20)));
-            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task every 5 seconds for 3 times").Every(Interval.Seconds(5), 3));
+            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task every 5 seconds for 3 times").Every(Lapse.Seconds(5), 3));
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

@@ -12,7 +12,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public const string TypeEvery = "every";
 
         public DateTime Created { get; set; }
-        public Interval Interval { get; set; }
+        public Lapse Interval { get; set; }
         public string Id { get; set; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
@@ -82,12 +82,12 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         {
             return Interval.Unit switch
             {
-                Interval.YearsUnit => date.AddYears(Interval.Number),
-                Interval.MonthsUnit => date.AddMonths(Interval.Number),
-                Interval.DaysUnit => date.AddDays(Interval.Number),
-                Interval.HoursUnit => date.AddHours(Interval.Number),
-                Interval.MinutesUnit => date.AddMinutes(Interval.Number),
-                Interval.SecondsUnit => date.AddSeconds(Interval.Number),
+                Lapse.YearsUnit => date.AddYears(Interval.Number),
+                Lapse.MonthsUnit => date.AddMonths(Interval.Number),
+                Lapse.DaysUnit => date.AddDays(Interval.Number),
+                Lapse.HoursUnit => date.AddHours(Interval.Number),
+                Lapse.MinutesUnit => date.AddMinutes(Interval.Number),
+                Lapse.SecondsUnit => date.AddSeconds(Interval.Number),
                 null => date,
                 _ => throw new NotSupportedException($"Interval unit of {Interval.Unit} is not supported"),
             };

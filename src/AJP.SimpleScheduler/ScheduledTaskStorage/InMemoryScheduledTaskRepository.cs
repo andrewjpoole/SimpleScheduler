@@ -1,5 +1,5 @@
-﻿using AJP.SimpleScheduler.DateTimeProvider;
-using AJP.SimpleScheduler.ScheduledTasks;
+﻿using AJP.SimpleScheduler.ScheduledTasks;
+using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +8,12 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
 {
     public class InMemoryScheduledTaskRepository : IScheduledTaskRepository
     {
-        public IDateTimeProvider DateTimeProvider { get; private set; }
+        public IClock Clock { get; private set; }
         private readonly Dictionary<string, ScheduledTask> _allTasks = new Dictionary<string, ScheduledTask>();
 
-        public InMemoryScheduledTaskRepository(IDateTimeProvider dateTimeProvider)
+        public InMemoryScheduledTaskRepository(IClock clock)
         {
-            DateTimeProvider = dateTimeProvider;
+            Clock = clock;
         }
 
         public void AddScheduledTask(ScheduledTask task)
@@ -40,7 +40,7 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
 
         public List<ScheduledTask> DetermineIfAnyTasksAreDue()
         {
-            return _allTasks.Values.Where(task => task.Due < DateTimeProvider.UtcNow()).ToList();
+            return _allTasks.Values.Where(task => task.Due < Clock.GetCurrentInstant().ToDateTimeUtc()).ToList();
         }
 
         public void UpdateScheduledTask(ScheduledTask dueTask)

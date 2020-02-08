@@ -2,7 +2,7 @@
 
 namespace AJP.SimpleScheduler.Intervals
 {
-    public class Interval : IInterval
+    public class Lapse : ILapse
     {
         public string Unit { get; }
         public int Number { get; }
@@ -14,11 +14,11 @@ namespace AJP.SimpleScheduler.Intervals
         public const string MinutesUnit = "mm";
         public const string SecondsUnit = "ss";
 
-        public Interval()
+        public Lapse()
         {
         }
 
-        public Interval(string unit, int number)
+        public Lapse(string unit, int number)
         {
             Unit = unit;
             Number = number;
@@ -29,37 +29,37 @@ namespace AJP.SimpleScheduler.Intervals
             return $"{Number}{Unit}";
         }
 
-        public static Interval Years(int number)
+        public static Lapse Years(int number)
         {
-            return new Interval(YearsUnit, number);
+            return new Lapse(YearsUnit, number);
         }
 
-        public static Interval Months(int number)
+        public static Lapse Months(int number)
         {
-            return new Interval(MonthsUnit, number);
+            return new Lapse(MonthsUnit, number);
         }
 
-        public static Interval Days(int number) 
+        public static Lapse Days(int number) 
         {
-            return new Interval(DaysUnit, number);
+            return new Lapse(DaysUnit, number);
         }
 
-        public static Interval Hours(int number)
+        public static Lapse Hours(int number)
         {
-            return new Interval(HoursUnit, number);
+            return new Lapse(HoursUnit, number);
         }
 
-        public static Interval Minutes(int number)
+        public static Lapse Minutes(int number)
         {
-            return new Interval(MinutesUnit, number);
+            return new Lapse(MinutesUnit, number);
         }
 
-        public static Interval Seconds(int number)
+        public static Lapse Seconds(int number)
         {
-            return new Interval(SecondsUnit, number);
+            return new Lapse(SecondsUnit, number);
         }
 
-        public static Interval Parse(string interval)
+        public static Lapse Parse(string interval)
         {
             // "1y" | "2m" | "3d" | "4hh" | "5mm" | "6ss"
             return interval switch

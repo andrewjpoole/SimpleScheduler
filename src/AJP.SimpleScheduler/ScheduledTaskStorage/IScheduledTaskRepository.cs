@@ -1,12 +1,12 @@
-﻿using AJP.SimpleScheduler.DateTimeProvider;
-using AJP.SimpleScheduler.ScheduledTasks;
+﻿using AJP.SimpleScheduler.ScheduledTasks;
+using NodaTime;
 using System.Collections.Generic;
 
 namespace AJP.SimpleScheduler.ScheduledTaskStorage
 {
     public interface IScheduledTaskRepository
     {
-        IDateTimeProvider DateTimeProvider { get; }
+        IClock Clock { get; }
         void AddScheduledTask(ScheduledTask simpleSchedule);
         void AddScheduledTask(ScheduledTaskBuilder taskBuilder);
         void RemoveScheduledTask(string id);
