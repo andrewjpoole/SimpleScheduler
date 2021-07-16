@@ -1,26 +1,24 @@
-﻿using AJP.ElasticBand;
-using AJP.SimpleScheduler.ScheduledTasks;
+﻿using AJP.SimpleScheduler.ScheduledTasks;
 using AJP.SimpleScheduler.ScheduledTaskStorage;
 using AJP.SimpleScheduler.TaskExecution;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using NodaTime.Extensions;
 
 namespace AJP.SimpleScheduler
 {
     public static class ServiceProviderExtensions
     {
-        public static IServiceCollection AddSimpleScheduler(this IServiceCollection services)
+        public static IServiceCollection AddSimpleScheduler(this IServiceCollection services, bool addInMemoryScheduledTaskRepository = false)
         {
             services
-                .AddSingleton<IClock>(SystemClock.Instance)
+                .AddSingleton<IClock>(SystemClock.Instance.InZone(DateTimeZoneProviders.Tzdb["Europe/London"]))
                 .AddSingleton<IScheduledTaskBuilderFactory, ScheduledTaskBuilderFactory>()
                 .AddSingleton<IDueTaskJobQueue>(new DueTaskJobQueue())
-                .AddSingleton<INormalJobExecuter, NormalJobExecuter>()
-                .AddHostedService<TimerService.TimerService>()            
-                .AddSingleton<IScheduledTaskRepository, InMemoryScheduledTaskRepository>();
+                .AddHostedService<TimerService.TimerService>();
+            
+                if(addInMemoryScheduledTaskRepository)
+                    services.AddSingleton<IScheduledTaskRepository, InMemoryScheduledTaskRepository>();
 
             return services;
         }

@@ -1,6 +1,6 @@
 ﻿using AJP.ElasticBand;
 
-namespace AJP.SimpleScheduler.ScheduledTaskStorage
+namespace AJP.SimpleScheduler.ElasticBandTaskRepository
 {
     public class ElasticScheduledTaskRepository<T> : ElasticRepository<T>
     {

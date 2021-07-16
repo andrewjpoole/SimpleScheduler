@@ -60,7 +60,6 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         {
             Type = ScheduledTask.TypeAfter;
             Interval = interval;
-            //DetermineNextDueTime();
             return this;
         }
 
@@ -68,7 +67,6 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         {
             Type = ScheduledTask.TypeEvery;
             Interval = interval;
-            //DetermineNextDueTime();
             return this;
         }
 

@@ -51,10 +51,12 @@ namespace AJP.SimpleScheduler.TimerService
             
             foreach (var dueTask in dueTasks)
             {
-                _dueTaskJobQueue.Enqueue(new NormalJob(dueTask.JobData, dueTask));
+                _logger.LogInformation($"Running Task {dueTask.Id} {dueTask} due @{dueTask.Due}");
+                //_dueTaskJobQueue.Enqueue(new ScheduledJob(dueTask.JobData, dueTask));
+                _dueTaskJobQueue.Enqueue(dueTask);
 
                 // update the task
-                dueTask.LastRunTime = taskRepo.Clock.GetCurrentInstant().ToDateTimeUtc();
+                dueTask.LastRunTime = taskRepo.ClockInstance.GetCurrentInstant().ToDateTimeUtc();
                 dueTask.NumberOfPreviousRuns += 1;
                 var shouldRunAgain = DetermineNextDueTime(dueTask);
                 if (shouldRunAgain)
@@ -97,19 +99,20 @@ namespace AJP.SimpleScheduler.TimerService
         private ZonedDateTime AddInterval(ScheduledTask task)
         {
             var nowUtc = _clock.GetCurrentInstant().InUtc();
+            var nowUtcInLondon = nowUtc.LocalDateTime;
 
-            var london = DateTimeZoneProviders.Tzdb["Europe/London"];
-            var clock = SystemClock.Instance.InZone(london); // should DI one of these?
-            var londonNow = clock.GetCurrentLocalDateTime();
+            //var london = DateTimeZoneProviders.Tzdb["Europe/London"];
+            //var clock = SystemClock.Instance.InZone(london);
+            //var londonNow = clock.GetCurrentLocalDateTime();
 
             return task.Interval.Unit switch
             {
-                Lapse.YearsUnit => londonNow.PlusYears(task.Interval.Number).InUtc(),
-                Lapse.MonthsUnit => londonNow.PlusMonths(task.Interval.Number).InUtc(),
-                Lapse.DaysUnit => londonNow.PlusDays(task.Interval.Number).InUtc(),
-                Lapse.HoursUnit => londonNow.PlusHours(task.Interval.Number).InUtc(),
-                Lapse.MinutesUnit => londonNow.PlusMinutes(task.Interval.Number).InUtc(),
-                Lapse.SecondsUnit => londonNow.PlusSeconds(task.Interval.Number).InUtc(),
+                Lapse.YearsUnit => nowUtcInLondon.PlusYears(task.Interval.Number).InUtc(),
+                Lapse.MonthsUnit => nowUtcInLondon.PlusMonths(task.Interval.Number).InUtc(),
+                Lapse.DaysUnit => nowUtcInLondon.PlusDays(task.Interval.Number).InUtc(),
+                Lapse.HoursUnit => nowUtcInLondon.PlusHours(task.Interval.Number).InUtc(),
+                Lapse.MinutesUnit => nowUtcInLondon.PlusMinutes(task.Interval.Number).InUtc(),
+                Lapse.SecondsUnit => nowUtcInLondon.PlusSeconds(task.Interval.Number).InUtc(),
                 null => nowUtc,
                 _ => throw new NotSupportedException($"Interval unit of {task.Interval.Unit} is not supported"),
             };

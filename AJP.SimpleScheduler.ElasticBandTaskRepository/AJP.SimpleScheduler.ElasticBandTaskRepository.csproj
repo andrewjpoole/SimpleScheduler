@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AJP.ElasticBand" Version="1.4.0" />
-    <PackageReference Include="NodaTime" Version="2.4.7" />
+    <PackageReference Include="AJP.ElasticBand" Version="1.6.1" />
+    <PackageReference Include="NodaTime" Version="3.0.5" />
   </ItemGroup>
 
   <ItemGroup>
