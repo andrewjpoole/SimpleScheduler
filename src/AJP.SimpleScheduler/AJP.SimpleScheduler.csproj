@@ -11,12 +11,15 @@ The task to be performed is a string, which could be a task id or serialised obj
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/andrewjpoole/SimpleScheduler</RepositoryUrl>
     <Authors>Andrew Poole</Authors>
-    <PackageReleaseNotes>1.1.0) Use NodaTime for all internal future datetime calculations, in london timezone.
-1.0.0) Initial version</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      1.2.0) Added a new local json file ScheduledTaskRepository, plus some refactoring
+      1.1.0) Use NodaTime for all internal future datetime calculations, in london timezone.
+      1.0.0) Initial version
+    </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
