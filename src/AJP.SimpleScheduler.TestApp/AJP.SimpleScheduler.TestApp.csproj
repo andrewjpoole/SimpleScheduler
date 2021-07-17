@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AJP.SimpleScheduler.ElasticBandTaskRepository\AJP.SimpleScheduler.ElasticBandTaskRepository.csproj" />
     <ProjectReference Include="..\AJP.SimpleScheduler\AJP.SimpleScheduler.csproj" />
   </ItemGroup>
 

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\AJP.SimpleScheduler\AJP.SimpleScheduler.csproj" />
+    <ProjectReference Include="..\AJP.SimpleScheduler\AJP.SimpleScheduler.csproj" />
   </ItemGroup>
 
 </Project>
