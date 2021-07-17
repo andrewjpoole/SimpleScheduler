@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,13 +6,16 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/andrewjpoole/SimpleScheduler</RepositoryUrl>
-    <PackageReleaseNotes>1.1.0) Updated ElasticBand which now has simple &lt; &gt; query support
-1.0.0) Initial version</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      1.2.0) Added a getById method
+      1.1.0) Updated ElasticBand which now has simple &lt; &gt; query support
+      1.0.0) Initial version
+    </PackageReleaseNotes>
     <Authors>Andrew Poole</Authors>
     <Description>An implenetation of IScheduledTaskRepository that uses the ElasticBand project to store tasks in Elasticsearch.</Description>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
