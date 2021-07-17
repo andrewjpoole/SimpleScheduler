@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AJP.SimpleScheduler.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AJP.SimpleScheduler.TestApp", "src\AJP.SimpleScheduler.TestApp\AJP.SimpleScheduler.TestApp.csproj", "{609059AD-42C6-4965-84CD-B470FD0A9A39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AJP.SimpleScheduler.ElasticBandTaskRepository", "AJP.SimpleScheduler.ElasticBandTaskRepository\AJP.SimpleScheduler.ElasticBandTaskRepository.csproj", "{157FAD51-18BF-4439-9488-22D0B0FB7079}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB88FFB9-0B41-4B3B-87E0-7E51773A4B32}"
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AJP.SimpleScheduler.ElasticBandTaskRepository", "src\AJP.SimpleScheduler.ElasticBandTaskRepository\AJP.SimpleScheduler.ElasticBandTaskRepository.csproj", "{5DBC30B7-D6DF-491A-819F-E622B9C33605}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{609059AD-42C6-4965-84CD-B470FD0A9A39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{157FAD51-18BF-4439-9488-22D0B0FB7079}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{157FAD51-18BF-4439-9488-22D0B0FB7079}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{157FAD51-18BF-4439-9488-22D0B0FB7079}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{157FAD51-18BF-4439-9488-22D0B0FB7079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DBC30B7-D6DF-491A-819F-E622B9C33605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DBC30B7-D6DF-491A-819F-E622B9C33605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DBC30B7-D6DF-491A-819F-E622B9C33605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DBC30B7-D6DF-491A-819F-E622B9C33605}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
