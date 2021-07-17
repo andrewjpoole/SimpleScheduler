@@ -10,12 +10,14 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public const string TypeAt = "at";
         public const string TypeAfter = "after";
         public const string TypeEvery = "every";
+        public const string TypeEveryStartingAt = "everyStartingAt";
 
         public DateTime Created { get; set; }
         public Lapse Interval { get; set; }
         public string Id { get; set; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
+        public DateTime StartingAt { get; set; }
         public int Repeated { get; set; }
         public string JobData { get; set; }
 
@@ -29,7 +31,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public override string ToString()
         {
             var timePart = string.Empty;
-            var repeatPart = string.Empty;
+            var secondPart = string.Empty;
             switch (Type)
             {
                 case TypeAt:
@@ -39,13 +41,17 @@ namespace AJP.SimpleScheduler.ScheduledTasks
                     timePart = $"{PartSeperator}{Interval}";
                     break;
                 case TypeEvery:
-                    repeatPart = Repeated != 0 ? $"{PartSeperator}x{Repeated}" : string.Empty;
+                    secondPart = Repeated != 0 ? $"{PartSeperator}x{Repeated}" : string.Empty;
+                    timePart = $"{PartSeperator}{Interval}";
+                    break;
+                case TypeEveryStartingAt:
+                    secondPart = $"{PartSeperator}{StartingAt:s}";
                     timePart = $"{PartSeperator}{Interval}";
                     break;
                 default:
                     break;
             }
-            return $"{Type}{timePart}{repeatPart}";
+            return $"{Type}{timePart}{secondPart}";
         }
     }
 }

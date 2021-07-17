@@ -23,6 +23,8 @@ namespace AJP.SimpleScheduler.Tests
             Assert.That(sut.Run("blah").Every(Lapse.Days(3)).CreateTask().ToString(), Is.EqualTo("every|3d"));
             Assert.That(sut.Run("blah").Every(Lapse.Seconds(10), 5).CreateTask().ToString(), Is.EqualTo("every|10ss|x5"));
             Assert.That(sut.Run("blah").After(Lapse.Hours(2)).CreateTask().ToString(), Is.EqualTo("after|2hh"));
+            Assert.That(sut.Run("blah").EveryStartingAt(Lapse.Days(3), "2020-01-24T09:30:00").CreateTask().ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
+            Assert.That(sut.Run("blah").EveryStartingAt(Lapse.Days(3), DateTime.Parse("2020-01-24T09:30:00")).CreateTask().ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
         }
 
         [Test]
@@ -38,6 +40,7 @@ namespace AJP.SimpleScheduler.Tests
             Assert.That(sut.FromString("every|3d").ToString(), Is.EqualTo("every|3d"));
             Assert.That(sut.FromString("every|10ss|x5").ToString(), Is.EqualTo("every|10ss|x5"));
             Assert.That(sut.FromString("after|2hh").ToString(), Is.EqualTo("after|2hh"));
+            Assert.That(sut.FromString("everyStartingAt|3d|2020-01-24T09:30:00").ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AJP.SimpleScheduler.Intervals;
 using NodaTime;
 using System;
+using NodaTime.Extensions;
 
 namespace AJP.SimpleScheduler.ScheduledTasks
 {
@@ -14,6 +15,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public string JobData { get; set; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
+        public DateTime StartingAt { get; set; }
         public int Repeated { get; set; }
 
         public ScheduledTaskBuilder(IClock clock)
@@ -79,6 +81,22 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             return Every(interval);
         }
 
+        public ScheduledTaskBuilder EveryStartingAt(Lapse interval, string utcStartingAt)
+        {
+            var utcStartingAtDateTime = DateTime.Parse(utcStartingAt);
+
+            return EveryStartingAt(interval, utcStartingAtDateTime);
+        }
+
+        public ScheduledTaskBuilder EveryStartingAt(Lapse interval, DateTime utcStartingAt)
+        {
+            Type = ScheduledTask.TypeEveryStartingAt;
+            Interval = interval;
+            StartingAt = utcStartingAt;
+            Due = utcStartingAt;
+            return this;
+        }
+
         public ScheduledTask FromString(string scheduleString)
         {
             if (string.IsNullOrEmpty(scheduleString))
@@ -108,6 +126,13 @@ namespace AJP.SimpleScheduler.ScheduledTasks
                         repeatTimes = Lapse.ParseRepeatTimes(parts[2]);
                     return Every(everyInterval, repeatTimes).CreateTask();
 
+                case ScheduledTask.TypeEveryStartingAt:
+                    var everyStartingAtInterval = Lapse.Parse(parts[1]);
+                    
+                    var startingAtPart = parts[2];
+
+                    return EveryStartingAt(everyStartingAtInterval, startingAtPart).CreateTask();
+
                 default:
                     throw new ArgumentException("scheduleString is not a valid SimpleSchedule string, it should start with 'now', 'at', 'after' or 'every'.");
             }
@@ -122,6 +147,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
                 JobData = JobData,
                 Type = Type,
                 Due = Due,
+                StartingAt = StartingAt,
                 Repeated = Repeated,
                 Interval = Interval
             };

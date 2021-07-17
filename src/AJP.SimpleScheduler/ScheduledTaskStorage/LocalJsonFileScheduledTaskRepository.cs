@@ -76,7 +76,7 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
 
         private void PersistStateToFile()
         {
-            File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(_allTasks));
+            File.WriteAllText(JsonFilePath, JsonSerializer.Serialize(_allTasks, new JsonSerializerOptions{ WriteIndented = true}));
         }
 
         private void LoadStateFromFile()

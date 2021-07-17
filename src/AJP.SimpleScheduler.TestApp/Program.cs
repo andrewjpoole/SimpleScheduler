@@ -85,6 +85,7 @@ namespace AJP.SimpleScheduler.TestApp
            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task after 10 seconds").After(Lapse.Seconds(30)));
            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task at a specified DateTime").At(DateTime.UtcNow.AddSeconds(20)));
            _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task every 5 seconds for 3 times").Every(Lapse.Seconds(5), 3));
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task every 20 seconds starting at now + 1mm").EveryStartingAt(Lapse.Seconds(20), DateTime.UtcNow.AddMinutes(1)));
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

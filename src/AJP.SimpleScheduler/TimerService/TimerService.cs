@@ -93,6 +93,12 @@ namespace AJP.SimpleScheduler.TimerService
                     return task.NumberOfPreviousRuns < task.Repeated;
                 }
             }
+
+            if (task.Type == ScheduledTask.TypeEveryStartingAt)
+            {
+                task.Due = AddInterval(task).ToDateTimeUtc();
+            }
+
             return true;
         }
 
