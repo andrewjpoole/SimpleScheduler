@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -12,6 +12,7 @@ The task to be performed is a string, which could be a task id or serialised obj
     <RepositoryUrl>https://github.com/andrewjpoole/SimpleScheduler</RepositoryUrl>
     <Authors>Andrew Poole</Authors>
     <PackageReleaseNotes>
+      1.4.0) Added support for Tasks with object as JobData and method of registering specific Handlers accordingly 
       1.3.1) Removed redundant reference to ElasticBand nuget package 
       1.3.0) Added an EveryStartingAt type
       1.2.0) Added a new local json file ScheduledTaskRepository, plus some refactoring
@@ -19,9 +20,10 @@ The task to be performed is a string, which could be a task id or serialised obj
       1.0.0) Initial version
     </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.3.1.0</AssemblyVersion>
-    <FileVersion>1.3.1.0</FileVersion>
-    <Version>1.3.1</Version>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
+    <Version>1.4.1</Version>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

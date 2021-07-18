@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AJP.SimpleScheduler.Intervals;
@@ -9,7 +8,6 @@ using AJP.SimpleScheduler.TaskExecution;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using NodaTime.Extensions;
 
 namespace AJP.SimpleScheduler.TimerService
 {
@@ -66,7 +64,7 @@ namespace AJP.SimpleScheduler.TimerService
             }
         }
 
-        private bool DetermineNextDueTime(ScheduledTask task)
+        private bool DetermineNextDueTime(IScheduledTask task)
         {
             // Check conditions and signal for task to be removed
             if (task.Type == ScheduledTask.TypeNow && task.NumberOfPreviousRuns > 0)
@@ -102,14 +100,10 @@ namespace AJP.SimpleScheduler.TimerService
             return true;
         }
 
-        private ZonedDateTime AddInterval(ScheduledTask task)
+        private ZonedDateTime AddInterval(IScheduledTask task)
         {
             var nowUtc = _clock.GetCurrentInstant().InUtc();
             var nowUtcInLondon = nowUtc.LocalDateTime;
-
-            //var london = DateTimeZoneProviders.Tzdb["Europe/London"];
-            //var clock = SystemClock.Instance.InZone(london);
-            //var londonNow = clock.GetCurrentLocalDateTime();
 
             return task.Interval.Unit switch
             {

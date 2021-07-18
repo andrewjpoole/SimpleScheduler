@@ -2,6 +2,6 @@
 {
     public interface IScheduledTaskBuilderFactory
     {
-        ScheduledTaskBuilder BuildTask();
+        ScheduledTaskBuilder CreateBuilder();
     }
 }

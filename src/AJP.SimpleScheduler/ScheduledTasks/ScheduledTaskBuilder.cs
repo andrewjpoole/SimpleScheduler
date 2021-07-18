@@ -1,6 +1,7 @@
 ﻿using AJP.SimpleScheduler.Intervals;
 using NodaTime;
 using System;
+using System.Text.Json;
 using NodaTime.Extensions;
 
 namespace AJP.SimpleScheduler.ScheduledTasks
@@ -13,6 +14,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public DateTime Created { get; set; }
         public Lapse Interval { get; set; }
         public string JobData { get; set; }
+        public Type JobDataType { get; set; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
         public DateTime StartingAt { get; set; }
@@ -21,12 +23,11 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public ScheduledTaskBuilder(IClock clock)
         {
             _clock = clock;
-
-            Id = Guid.NewGuid().ToString();
+            
             Created = _clock.GetCurrentInstant().ToDateTimeUtc();
         }
 
-        public ScheduledTaskBuilder Run(string jobData)
+        public ScheduledTaskBuilder WithJobData(string jobData)
         {
             if (string.IsNullOrEmpty(jobData))
             {
@@ -34,6 +35,17 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             }
 
             JobData = jobData;
+            JobDataType = typeof(string);
+
+            return this;
+        }
+
+        public ScheduledTaskBuilder WithJobData<T>(T jobData)
+        {
+            var jobDataJson = JsonSerializer.Serialize(jobData);
+
+            JobData = jobDataJson;
+            JobDataType = typeof(T);
 
             return this;
         }
@@ -140,11 +152,11 @@ namespace AJP.SimpleScheduler.ScheduledTasks
 
         public ScheduledTask CreateTask()
         {
-            return new ScheduledTask
+            return new()
             {
-                Id = Id,
                 Created = Created,
                 JobData = JobData,
+                JobDataTypeName = JobDataType.Name,
                 Type = Type,
                 Due = Due,
                 StartingAt = StartingAt,

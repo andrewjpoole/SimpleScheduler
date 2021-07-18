@@ -11,7 +11,7 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
     public class LocalJsonFileScheduledTaskRepository : IScheduledTaskRepository
     {
         private Dictionary<string, ScheduledTask> _allTasks = new Dictionary<string, ScheduledTask>();
-        public IClock ClockInstance { get; private set; }
+        public IClock ClockInstance { get; }
 
         private string _jsonFilePath;
         public string JsonFilePath {

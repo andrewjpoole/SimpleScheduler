@@ -11,7 +11,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             _clock = clock;
         }
 
-        public ScheduledTaskBuilder BuildTask()
+        public ScheduledTaskBuilder CreateBuilder()
         {
             return new ScheduledTaskBuilder(_clock);
         }

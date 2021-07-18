@@ -7,7 +7,7 @@ namespace AJP.SimpleScheduler.ElasticBandTaskRepository
 {
     public class ElasticBandScheduledTaskRepository : IScheduledTaskRepository
     {
-        public IClock ClockInstance { get; private set; }
+        public IClock ClockInstance { get; }
         private readonly ElasticScheduledTaskRepository<ScheduledTask> _scheduledTaskRepository;
 
         public ElasticBandScheduledTaskRepository(

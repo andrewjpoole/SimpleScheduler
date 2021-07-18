@@ -7,12 +7,13 @@ namespace AJP.SimpleScheduler.ScheduledTasks
     {
         DateTime Created { get; set; }
         string Id { get; }
-        string Type { get; }
-        DateTime Due { get; }
-        int Repeated { get; }
-        string JobData { get; }
+        string Type { get; set; }
+        DateTime Due { get; set; }
+        DateTime StartingAt { get; set; }
+        int Repeated { get; set; }
+        string JobData { get; set; }
+        string JobDataTypeName { get; set; }
         Lapse Interval { get; set; }
-
         int NumberOfPreviousRuns { get; set; }
         DateTime LastRunTime { get; set; }
     }

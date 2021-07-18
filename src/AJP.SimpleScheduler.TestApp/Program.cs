@@ -5,6 +5,7 @@ using Serilog;
 using System;
 using Serilog.Sinks.Elasticsearch;
 using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AJP.ElasticBand;
@@ -69,27 +70,47 @@ namespace AJP.SimpleScheduler.TestApp
         {
             _taskRepository = scheduledTaskRepository; // where the scheduled tasks are stored
             _taskBuilderFactory = scheduledTaskBuilderFactory; // a handy builder for scheduled tasks
-            _logger = logger; // signify that a task has been executed
+            _logger = logger; // gather evidence that a task has been executed
 
-            // Setup the task handler
-            dueTaskJobQueue.RegisterHandler<ScheduledTask>((scheduledTask) =>
+            // Setup a task handler for all tasks
+            dueTaskJobQueue.RegisterHandlerForAllTasks((scheduledTask) =>
             {
                 _logger.LogInformation($"{scheduledTask.JobData} {scheduledTask.Id}");
             });
+
+            // Setup a specific task handler for tasks which have a SpecificTaskPayload as their jobdata
+            dueTaskJobQueue.RegisterHandlerWhen((scheduledTask) =>
+            {
+                var payload = JsonSerializer.Deserialize<SpecificTaskPayload>(scheduledTask.JobData);
+                _logger.LogInformation($"SpecificTaskPayload {payload.Run()} {scheduledTask.Id}");
+            }, task => task.JobDataTypeName == nameof(SpecificTaskPayload));
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             // Add some tasks to the repository
-           _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task now!").Now());
-           _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task after 10 seconds").After(Lapse.Seconds(30)));
-           _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task at a specified DateTime").At(DateTime.UtcNow.AddSeconds(20)));
-           _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task every 5 seconds for 3 times").Every(Lapse.Seconds(5), 3));
-           _taskRepository.AddScheduledTask(_taskBuilderFactory.BuildTask().Run("* run task every 20 seconds starting at now + 1mm").EveryStartingAt(Lapse.Seconds(20), DateTime.UtcNow.AddMinutes(1)));
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task now!").Now());
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task after 10 seconds").After(Lapse.Seconds(30)));
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task at a specified DateTime").At(DateTime.UtcNow.AddSeconds(20)));
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task every 5 seconds for 3 times").Every(Lapse.Seconds(5), 3));
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task every 20 seconds starting at now + 1mm").EveryStartingAt(Lapse.Seconds(20), DateTime.UtcNow.AddMinutes(1)).CreateTask());
+
+           var payload = new SpecificTaskPayload()
+           {
+               SomethingSpecific = "Bob"
+           };
+           _taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData(payload).Now().CreateTask());
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
         }
+    }
+
+    public class SpecificTaskPayload
+    {
+        public string SomethingSpecific { get; set; }
+
+        public string Run() => $"something specific {SomethingSpecific} @ {DateTime.UtcNow}";
     }
 }

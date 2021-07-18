@@ -14,18 +14,20 @@ namespace AJP.SimpleScheduler.ScheduledTasks
 
         public DateTime Created { get; set; }
         public Lapse Interval { get; set; }
-        public string Id { get; set; }
+        public string Id { get; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
         public DateTime StartingAt { get; set; }
         public int Repeated { get; set; }
         public string JobData { get; set; }
+        public string JobDataTypeName { get; set; }
 
         public int NumberOfPreviousRuns { get; set; }
         public DateTime LastRunTime { get; set; }
 
         public ScheduledTask()
-        {            
+        {
+            Id = Guid.NewGuid().ToString();
         }
 
         public override string ToString()

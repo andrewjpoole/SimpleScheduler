@@ -17,14 +17,14 @@ namespace AJP.SimpleScheduler.Tests
             
             var sut = new ScheduledTaskBuilder(fakeClock);
 
-            Assert.That(sut.Run("blah").Now().CreateTask().ToString(), Is.EqualTo("now"));
-            Assert.That(sut.Run("blah").At(new DateTime(2020, 01, 24)).CreateTask().ToString(), Is.EqualTo("at|2020-01-24T00:00:00"));
-            Assert.That(sut.Run("blah").At("2020-01-24T00:00:00").CreateTask().ToString(), Is.EqualTo("at|2020-01-24T00:00:00"));
-            Assert.That(sut.Run("blah").Every(Lapse.Days(3)).CreateTask().ToString(), Is.EqualTo("every|3d"));
-            Assert.That(sut.Run("blah").Every(Lapse.Seconds(10), 5).CreateTask().ToString(), Is.EqualTo("every|10ss|x5"));
-            Assert.That(sut.Run("blah").After(Lapse.Hours(2)).CreateTask().ToString(), Is.EqualTo("after|2hh"));
-            Assert.That(sut.Run("blah").EveryStartingAt(Lapse.Days(3), "2020-01-24T09:30:00").CreateTask().ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
-            Assert.That(sut.Run("blah").EveryStartingAt(Lapse.Days(3), DateTime.Parse("2020-01-24T09:30:00")).CreateTask().ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
+            Assert.That(sut.WithJobData("blah").Now().CreateTask().ToString(), Is.EqualTo("now"));
+            Assert.That(sut.WithJobData("blah").At(new DateTime(2020, 01, 24)).CreateTask().ToString(), Is.EqualTo("at|2020-01-24T00:00:00"));
+            Assert.That(sut.WithJobData("blah").At("2020-01-24T00:00:00").CreateTask().ToString(), Is.EqualTo("at|2020-01-24T00:00:00"));
+            Assert.That(sut.WithJobData("blah").Every(Lapse.Days(3)).CreateTask().ToString(), Is.EqualTo("every|3d"));
+            Assert.That(sut.WithJobData("blah").Every(Lapse.Seconds(10), 5).CreateTask().ToString(), Is.EqualTo("every|10ss|x5"));
+            Assert.That(sut.WithJobData("blah").After(Lapse.Hours(2)).CreateTask().ToString(), Is.EqualTo("after|2hh"));
+            Assert.That(sut.WithJobData("blah").EveryStartingAt(Lapse.Days(3), "2020-01-24T09:30:00").CreateTask().ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
+            Assert.That(sut.WithJobData("blah").EveryStartingAt(Lapse.Days(3), DateTime.Parse("2020-01-24T09:30:00")).CreateTask().ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
         }
 
         [Test]

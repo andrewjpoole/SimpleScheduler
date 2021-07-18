@@ -14,16 +14,28 @@ namespace AJP.SimpleScheduler.TaskExecution
             _jobs = new BroadcastBlock<IScheduledTask>(job => job);
         }
 
-        public void RegisterHandler<T>(Action<T> handleAction) where T : IScheduledTask
+        public void RegisterHandlerForAllTasks(Action<IScheduledTask> handleAction)
         {
             var executionOptions = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 };
             var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
 
-            Action<IScheduledTask> actionWrapper = (scheduledTask) => handleAction((T)scheduledTask);
+            Action<IScheduledTask> actionWrapper = (scheduledTask) => handleAction(scheduledTask);
 
             var actionBlock = new ActionBlock<IScheduledTask>((scheduledTask) => actionWrapper(scheduledTask), executionOptions);
 
-            _jobs.LinkTo(actionBlock, linkOptions, predicate: (scheduledTask) => scheduledTask is T);
+            _jobs.LinkTo(actionBlock, linkOptions, predicate: (scheduledTask) => true); // executes for all tasks
+        }
+
+        public void RegisterHandlerWhen(Action<IScheduledTask> handleAction, Predicate<IScheduledTask> predicate)
+        {
+            var executionOptions = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 2 };
+            var linkOptions = new DataflowLinkOptions { PropagateCompletion = true };
+
+            Action<IScheduledTask> actionWrapper = (scheduledTask) => handleAction(scheduledTask);
+
+            var actionBlock = new ActionBlock<IScheduledTask>((scheduledTask) => actionWrapper(scheduledTask), executionOptions);
+
+            _jobs.LinkTo(actionBlock, linkOptions, predicate: (scheduledTask) => predicate(scheduledTask)); // executes when predicate evaluates to true
         }
 
         public async Task Enqueue(IScheduledTask scheduledJob)

@@ -7,7 +7,8 @@ namespace AJP.SimpleScheduler.TaskExecution
     public interface IDueTaskJobQueue
     {
         Task Enqueue(IScheduledTask scheduledTask);
-        void RegisterHandler<T>(Action<T> handleAction) where T : IScheduledTask;
+        void RegisterHandlerForAllTasks(Action<IScheduledTask> handleAction);
+        void RegisterHandlerWhen(Action<IScheduledTask> handleAction, Predicate<IScheduledTask> predicate);
         void Stop();
     }
 }

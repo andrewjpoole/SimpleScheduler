@@ -10,7 +10,7 @@ namespace AJP.SimpleScheduler.ScheduledTaskStorage
     public class InMemoryScheduledTaskRepository : IScheduledTaskRepository
     {
         private readonly ILogger<InMemoryScheduledTaskRepository> _logger;
-        public IClock ClockInstance { get; private set; }
+        public IClock ClockInstance { get; }
         private readonly Dictionary<string, ScheduledTask> _allTasks = new Dictionary<string, ScheduledTask>();
 
         public InMemoryScheduledTaskRepository(IClock clockInstance, ILogger<InMemoryScheduledTaskRepository> logger)

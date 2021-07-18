@@ -10,16 +10,19 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         string Id { get; set; }
         Lapse Interval { get; set; }
         string JobData { get; set; }
+        Type JobDataType { get; set; }
         int Repeated { get; set; }
         string Type { get; set; }
 
+
+        ScheduledTaskBuilder WithJobData(string jobData);
+        ScheduledTaskBuilder WithJobData<T>(T jobData);
         ScheduledTaskBuilder After(Lapse interval);
         ScheduledTaskBuilder At(DateTime utcRunAt);
         ScheduledTaskBuilder At(string utcRunAtString);
         ScheduledTaskBuilder Every(Lapse interval);
         ScheduledTaskBuilder Every(Lapse interval, int repeatTimes);
         ScheduledTaskBuilder Now();
-        ScheduledTaskBuilder Run(string jobData);
 
         ScheduledTask CreateTask();
     }

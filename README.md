@@ -18,6 +18,8 @@ Internally, SimpeScheduler depends on the excellent NodaTime library, all future
 
 ## How to use it
 
+`ScheduledTasks` have a `JobData` string property and a `JobDataTypeName` propety. If `JobData` can be an ordinary string or a json serialised objec, where `JobDataTypeName` contains the name of the Type i.e. either System.String or whatever the Type of the object is. This enables us to register handlers for specific JobData Types.
+
 ```c#
 var sched = new SimpleSchedule().FromString("now");
 var sched = new SimpleSchedule().FromString("at|2020-01-24T00:00:00");
@@ -37,7 +39,44 @@ var sched = new SimpleSchedule().Run().EveryStartingAt(Interval.Seconds(10), new
 var sched = new SimpleSchedule().Run().After(Interval.Hours(2));
 ```
 
-## How it will work
+```c#
+// Given a payload class...
+public class SpecificTaskPayload
+{
+    public string SomethingSpecific { get; set; }
+
+    public string Run() => $"something specific {SomethingSpecific} @ {DateTime.UtcNow}";
+}
+...
+
+// Request an instance of the IScheduledTaskRepository and add some tasks to it...
+_taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task now!").Now());
+_taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task after 10 seconds").After(Lapse.Seconds(30)));
+_taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task at a specified DateTime").At(DateTime.UtcNow.AddSeconds(20)));
+_taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task every 5 seconds for 3 times").Every(Lapse.Seconds(5), 3));
+_taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData("* run task every 20 seconds starting at now + 1mm").EveryStartingAt(Lapse.Seconds(20), DateTime.UtcNow.AddMinutes(1)).CreateTask());
+var payload = new SpecificTaskPayload()
+{
+    SomethingSpecific = "Bob"
+};
+_taskRepository.AddScheduledTask(_taskBuilderFactory.CreateBuilder().WithJobData(payload).Now().CreateTask());
+
+// Request an instance of IDueTaskJobQueue from DI and setup a task handler for all tasks
+dueTaskJobQueue.RegisterHandlerForAllTasks((scheduledTask) =>
+{
+    _logger.LogInformation($"{scheduledTask.JobData} {scheduledTask.Id}");
+});
+
+// Or setup a specific task handler for tasks which have a SpecificTaskPayload as their jobdata
+dueTaskJobQueue.RegisterHandlerWhen((scheduledTask) =>
+{
+    var payload = JsonSerializer.Deserialize<SpecificTaskPayload>(scheduledTask.JobData);
+    _logger.LogInformation($"SpecificTaskPayload {payload.Run()} {scheduledTask.Id}");
+}, task => task.JobDataTypeName == nameof(SpecificTaskPayload));
+
+```
+
+## How it works
 
 The main parts are:
 1) A maintained list of scheduled tasks, persisted somewhere in-memory or via an implementation of the IScheduledTaskRepository, a local json file implementation is included.
