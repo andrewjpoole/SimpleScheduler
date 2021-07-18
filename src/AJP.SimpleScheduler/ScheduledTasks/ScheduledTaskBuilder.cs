@@ -14,7 +14,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
         public DateTime Created { get; set; }
         public Lapse Interval { get; set; }
         public string JobData { get; set; }
-        public Type JobDataType { get; set; }
+        public string JobDataTypeName { get; set; }
         public string Type { get; set; }
         public DateTime Due { get; set; }
         public DateTime StartingAt { get; set; }
@@ -35,7 +35,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             }
 
             JobData = jobData;
-            JobDataType = typeof(string);
+            JobDataTypeName = nameof(String);
 
             return this;
         }
@@ -45,7 +45,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             var jobDataJson = JsonSerializer.Serialize(jobData);
 
             JobData = jobDataJson;
-            JobDataType = typeof(T);
+            JobDataTypeName = typeof(T).Name;
 
             return this;
         }
@@ -109,7 +109,7 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             return this;
         }
 
-        public ScheduledTask FromString(string scheduleString)
+        public ScheduledTask FromString(string scheduleString, object jobData)
         {
             if (string.IsNullOrEmpty(scheduleString))
                 throw new ArgumentNullException("scheduleString must not be null or empty");
@@ -121,29 +121,29 @@ namespace AJP.SimpleScheduler.ScheduledTasks
             switch (parts[0])
             {
                 case ScheduledTask.TypeNow:
-                    return Now().CreateTask();
+                    return Now().WithJobData(jobData).CreateTask();
 
                 case ScheduledTask.TypeAt:
                     var runAt = DateTime.Parse(parts[1]);
-                    return At(runAt).CreateTask();
+                    return At(runAt).WithJobData(jobData).CreateTask();
 
                 case ScheduledTask.TypeAfter:
                     var afterInterval = Lapse.Parse(parts[1]);
-                    return After(afterInterval).CreateTask();
+                    return After(afterInterval).WithJobData(jobData).CreateTask();
 
                 case ScheduledTask.TypeEvery:
                     var everyInterval = Lapse.Parse(parts[1]);
                     var repeatTimes = 0;
                     if (parts.Length > 2)
                         repeatTimes = Lapse.ParseRepeatTimes(parts[2]);
-                    return Every(everyInterval, repeatTimes).CreateTask();
+                    return Every(everyInterval, repeatTimes).WithJobData(jobData).CreateTask();
 
                 case ScheduledTask.TypeEveryStartingAt:
                     var everyStartingAtInterval = Lapse.Parse(parts[1]);
                     
                     var startingAtPart = parts[2];
 
-                    return EveryStartingAt(everyStartingAtInterval, startingAtPart).CreateTask();
+                    return EveryStartingAt(everyStartingAtInterval, startingAtPart).WithJobData(jobData).CreateTask();
 
                 default:
                     throw new ArgumentException("scheduleString is not a valid SimpleSchedule string, it should start with 'now', 'at', 'after' or 'every'.");
@@ -152,11 +152,14 @@ namespace AJP.SimpleScheduler.ScheduledTasks
 
         public ScheduledTask CreateTask()
         {
+            if (string.IsNullOrEmpty(JobData))
+                throw new ApplicationException("Task must have JobData");
+
             return new()
             {
                 Created = Created,
                 JobData = JobData,
-                JobDataTypeName = JobDataType.Name,
+                JobDataTypeName = JobDataTypeName,
                 Type = Type,
                 Due = Due,
                 StartingAt = StartingAt,

@@ -21,11 +21,11 @@ Internally, SimpeScheduler depends on the excellent NodaTime library, all future
 `ScheduledTasks` have a `JobData` string property and a `JobDataTypeName` propety. If `JobData` can be an ordinary string or a json serialised objec, where `JobDataTypeName` contains the name of the Type i.e. either System.String or whatever the Type of the object is. This enables us to register handlers for specific JobData Types.
 
 ```c#
-var sched = new SimpleSchedule().FromString("now");
-var sched = new SimpleSchedule().FromString("at|2020-01-24T00:00:00");
-var sched = new SimpleSchedule().FromString("every|3d");
-var sched = new SimpleSchedule().FromString("every|10ss|x5");
-var sched = new SimpleSchedule().FromString("after|2hh");
+var sched = new SimpleSchedule().FromString("now", "some job data");
+var sched = new SimpleSchedule().FromString("at|2020-01-24T00:00:00", "some job data");
+var sched = new SimpleSchedule().FromString("every|3d", "some job data");
+var sched = new SimpleSchedule().FromString("every|10ss|x5", "some job data");
+var sched = new SimpleSchedule().FromString("after|2hh", "some job data");
 ```
 Calling `ToString()` on a SimpleScheduler will return the string representation.
 

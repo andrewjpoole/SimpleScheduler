@@ -35,12 +35,12 @@ namespace AJP.SimpleScheduler.Tests
 
             var sut = new ScheduledTaskBuilder(fakeClock);
 
-            Assert.That(sut.FromString("now").ToString(), Is.EqualTo("now"));
-            Assert.That(sut.FromString("at|2020-01-24T00:00:00").ToString(), Is.EqualTo("at|2020-01-24T00:00:00"));
-            Assert.That(sut.FromString("every|3d").ToString(), Is.EqualTo("every|3d"));
-            Assert.That(sut.FromString("every|10ss|x5").ToString(), Is.EqualTo("every|10ss|x5"));
-            Assert.That(sut.FromString("after|2hh").ToString(), Is.EqualTo("after|2hh"));
-            Assert.That(sut.FromString("everyStartingAt|3d|2020-01-24T09:30:00").ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
+            Assert.That(sut.FromString("now", "some job data").ToString(), Is.EqualTo("now"));
+            Assert.That(sut.FromString("at|2020-01-24T00:00:00", "some job data").ToString(), Is.EqualTo("at|2020-01-24T00:00:00"));
+            Assert.That(sut.FromString("every|3d", "some job data").ToString(), Is.EqualTo("every|3d"));
+            Assert.That(sut.FromString("every|10ss|x5", "some job data").ToString(), Is.EqualTo("every|10ss|x5"));
+            Assert.That(sut.FromString("after|2hh", "some job data").ToString(), Is.EqualTo("after|2hh"));
+            Assert.That(sut.FromString("everyStartingAt|3d|2020-01-24T09:30:00", "some job data").ToString(), Is.EqualTo("everyStartingAt|3d|2020-01-24T09:30:00"));
         }
     }
 }
